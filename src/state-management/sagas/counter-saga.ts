@@ -1,27 +1,27 @@
 import { put, takeEvery, all, delay } from 'redux-saga/effects';
-import { ADD_ONE, MINUS_ONE, ADD_ONE_ASYNC, MINUS_ONE_ASYNC } from '../actions';
-  
+import { counterSlice } from '../slice';
+
 function* incrementAsync() {
-  yield delay(500);
-  yield put({ type: ADD_ONE });
+    yield delay(500);
+    yield put({ type: counterSlice.actions.increment().type });
 }
 
 function* decrementAsync() {
-  yield delay(500);
-  yield put({ type:  MINUS_ONE });
+    yield delay(500);
+    yield put({ type: counterSlice.actions.decrement().type });
 }
-  
+
 function* watchIncrementAsync() {
-  yield takeEvery(ADD_ONE_ASYNC, incrementAsync);
+    yield takeEvery(counterSlice.actions.increment_async().type, incrementAsync);
 }
 
 function* watchDecrementAsync() {
-  yield takeEvery(MINUS_ONE_ASYNC, decrementAsync);
+    yield takeEvery(counterSlice.actions.decrement_async().type, decrementAsync);
 }
-  
+
 export function* counterSaga() {
-  yield all([
-    watchIncrementAsync(),
-    watchDecrementAsync()
-  ]);
+    yield all([
+        watchIncrementAsync(),
+        watchDecrementAsync()
+    ]);
 } 

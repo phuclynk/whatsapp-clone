@@ -1,15 +1,38 @@
 import createSagaMiddleware from 'redux-saga';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import { rootSaga } from '../sagas';
-import { rootReducer } from '../reducer';
+import { logger } from '../middleware';
+import { rootReducer as reducer } from '../reducer';
+import { useDispatch } from 'react-redux';
 
-const sagaMiddleware = createSagaMiddleware();
+type AppDispatch = typeof store.dispatch
 
-export const store = createStore(
-    rootReducer, 
-    composeWithDevTools(applyMiddleware(sagaMiddleware))
-);
+function configureAppStore(initialState = {}) {
+    const sagaMiddleware = createSagaMiddleware();
+    const middleware = [...getDefaultMiddleware(), sagaMiddleware];
+    const devMode = process.env.NODE_ENV === 'development';
 
-sagaMiddleware.run(rootSaga);
+    if (devMode) {
+        middleware.push(logger);
+    }
+
+    const store = configureStore({
+        reducer,
+        middleware,
+        preloadedState: initialState,
+        devTools: process.env.NODE_ENV !== 'production',
+    });
+
+    if (process.env.NODE_ENV !== 'production' && module.hot) {
+        module.hot.accept('../reducer', () => store.replaceReducer(reducer));
+    }
+
+    sagaMiddleware.run(rootSaga);
+    return store;
+};
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const store = configureAppStore();
+
+

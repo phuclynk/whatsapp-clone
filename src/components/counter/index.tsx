@@ -1,13 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import { useDispatch } from 'react-redux';
 
+import { useAppDispatch } from '@root/state-management/store';
 import { useTypedSelector } from '@root/state-management/reducer';
-import { 
-    decrease_async, 
-    increase_async, 
-    decrease, 
-    increase 
-} from '@root/state-management/actions';
+import { counterActions } from '@root/state-management/slice/counter-slice';
 
 import './style.scss';
 
@@ -15,22 +10,21 @@ type CounterProps = {
 
 };
 
-// eslint-disable-next-line no-empty-pattern
-export const Counter : FunctionComponent = ({} : CounterProps) => {
-    const dispatch = useDispatch();
-    const { number } = useTypedSelector(state => state.counter);
+export const Counter : FunctionComponent = ({...params} : CounterProps) => {
+    const dispatch = useAppDispatch();
+    const number = useTypedSelector(state => state.counter);
 
     const increaseNumber = () => {
-        dispatch(increase());
+        dispatch(counterActions.increment());
     };
     const decreaseNumber = () => {
-        dispatch(decrease());
+        dispatch(counterActions.decrement());
     };
     const increaseNumberAsync = () => {
-        dispatch(increase_async());
+        dispatch(counterActions.increment_async());
     };
     const decreaseNumberAsync = () => {
-        dispatch(decrease_async());
+        dispatch(counterActions.decrement_async());
     };
 
     return (
