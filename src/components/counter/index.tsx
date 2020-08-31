@@ -1,41 +1,32 @@
 import React, { FunctionComponent } from 'react';
+import { Button } from '@material-ui/core';
 
 import { useAppDispatch } from '@root/state-management/store';
 import { useTypedSelector } from '@root/state-management/reducer';
 import { counterActions } from '@root/state-management/slice/counter-slice';
 
-import './style.scss';
+import { useStyle } from './style';
 
 type CounterProps = {
 
 };
 
 export const Counter : FunctionComponent = ({...params} : CounterProps) => {
+    const classes = useStyle();
+
     const dispatch = useAppDispatch();
     const number = useTypedSelector(state => state.counter);
-
-    const increaseNumber = () => {
-        dispatch(counterActions.increment());
-    };
-    const decreaseNumber = () => {
-        dispatch(counterActions.decrement());
-    };
-    const increaseNumberAsync = () => {
-        dispatch(counterActions.increment_async());
-    };
-    const decreaseNumberAsync = () => {
-        dispatch(counterActions.decrement_async());
-    };
+    const { decrement, decrement_async, increment, increment_async } = counterActions;
 
     return (
-        <div className="App" >
-            <header className="App-header">
+        <div className={classes.counter} >
+            <header className={classes.counterHeader}>
                 <h1>{number}</h1>
-                <div className='counter-container'>
-                    <button onClick={decreaseNumber} type="button" className='button button__subtract'>-</button>
-                    <button onClick={increaseNumber} type="button" className='button button__add'>+</button>
-                    <button onClick={decreaseNumberAsync} type="button" className='button button__subtract'>(-)</button>
-                    <button onClick={increaseNumberAsync} type="button" className='button button__add'>(+)</button>
+                <div className={classes.counterContainer}>
+                    <Button variant='contained' color='primary' className={classes.btnSubtract} onClick={() => dispatch(decrement())} >-</Button>
+                    <Button variant='contained' color='primary' className={classes.btnAdd} onClick={() => dispatch(increment())} >+</Button>
+                    <Button variant='contained' color='primary' className={classes.btnSubtractAsync} onClick={() => dispatch(decrement_async())} >-</Button>
+                    <Button variant='contained' color='primary' className={classes.btnAddAsync} onClick={() => dispatch(increment_async())} >+</Button>
                 </div>
             </header>
         </div>

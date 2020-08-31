@@ -6,7 +6,7 @@ import { logger } from '../middleware';
 import { rootReducer as reducer } from '../reducer';
 import { useDispatch } from 'react-redux';
 
-type AppDispatch = typeof store.dispatch
+type AppDispatch = typeof store.dispatch;
 
 function configureAppStore(initialState = {}) {
     const sagaMiddleware = createSagaMiddleware();
