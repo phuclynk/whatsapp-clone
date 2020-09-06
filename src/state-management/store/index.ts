@@ -1,16 +1,21 @@
 import createSagaMiddleware from 'redux-saga';
+import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
+import { createBrowserHistory  } from 'history';
+import { routerMiddleware } from 'connected-react-router';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import { rootSaga } from '../sagas';
 import { logger } from '../middleware';
-import { rootReducer as reducer } from '../reducer';
-import { useDispatch } from 'react-redux';
+import { createRootReducer } from '../reducer';
 
-type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch;
+export const history = createBrowserHistory();
+
+const reducer = createRootReducer(history as any);
 
 function configureAppStore(initialState = {}) {
     const sagaMiddleware = createSagaMiddleware();
-    const middleware = [...getDefaultMiddleware(), sagaMiddleware];
+    const middleware = [...getDefaultMiddleware(), sagaMiddleware, routerMiddleware(history)];
     const devMode = process.env.NODE_ENV === 'development';
 
     if (devMode) {
@@ -34,5 +39,8 @@ function configureAppStore(initialState = {}) {
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const store = configureAppStore();
+
+export type RootState = ReturnType<typeof reducer>;
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 

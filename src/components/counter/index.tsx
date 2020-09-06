@@ -1,9 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { Button } from '@material-ui/core';
 
-import { useAppDispatch } from '@root/state-management/store';
-import { useTypedSelector } from '@root/state-management/reducer';
 import { counterActions } from '@root/state-management/slice/counter-slice';
+import { useAppDispatch, useTypedSelector } from '@root/state-management/store';
 
 import { useStyle } from './style';
 
@@ -13,8 +12,8 @@ type CounterProps = {
 
 export const Counter : FunctionComponent = ({...params} : CounterProps) => {
     const classes = useStyle();
-
     const dispatch = useAppDispatch();
+
     const number = useTypedSelector(state => state.counter);
     const { decrement, decrement_async, increment, increment_async } = counterActions;
 

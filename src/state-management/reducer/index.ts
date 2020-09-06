@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import { History }  from 'history';
+import { connectRouter } from 'connected-react-router';
+
 import { counterReducer } from '../slice/counter-slice';
 
-export const rootReducer = combineReducers({
+export const createRootReducer = (history: History) => combineReducers({
+    router: connectRouter(history),
     counter: counterReducer
 });
-export type RootState = ReturnType<typeof rootReducer>;
-export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
