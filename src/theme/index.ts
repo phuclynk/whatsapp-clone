@@ -10,4 +10,5 @@ export const theme = createMuiTheme({
             main: grey[500],
         },
     },
+    spacing: 8,
 });
